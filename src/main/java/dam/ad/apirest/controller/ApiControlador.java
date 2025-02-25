@@ -7,6 +7,7 @@ import dam.ad.apirest.repository.HabitacionRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class ApiControlador {
     @PostMapping("/habitacion")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveHabitacion(@RequestBody Habitacion h){
+        h.setFecha(new Date());
         habitacionRepo.save(h);
     }
 
@@ -45,6 +47,7 @@ public class ApiControlador {
         if(h.getCliente() != null)
             habitacion.setCliente(h.getCliente());
         habitacion.setNumCamas(h.getNumCamas());
+        habitacion.setFecha(new Date());
         habitacionRepo.save(habitacion);
     }
 
@@ -86,17 +89,13 @@ public class ApiControlador {
         clienteRepo.deleteById(id);
     }
 
-    @PutMapping("/cliente/{id}")
-    public void putHabitacion(@PathVariable int id, @RequestBody Habitacion h){
-        Habitacion habitacion;
-        if(!habitacionRepo.existsById(h.getId())){
-            habitacionRepo.save(h);
-            habitacion = h;
-        } else {
-            habitacion = habitacionRepo.findById(h.getId()).orElse(new Habitacion());
-        }
-        Cliente cliente = clienteRepo.findById(id).orElse(new Cliente());
-        cliente.addHabitacion(habitacion);
+    @PutMapping("/cliente/{idC}/habitacion/{idH}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void putHabitacion(@PathVariable int idC, @PathVariable int idH){
+        Habitacion habitacion = habitacionRepo.findById(idH).orElse(new Habitacion());
+        Cliente cliente = clienteRepo.findById(idC).orElse(new Cliente());
+        habitacion.setCliente(cliente);
+        habitacionRepo.save(habitacion);
         clienteRepo.save(cliente);
     }
 

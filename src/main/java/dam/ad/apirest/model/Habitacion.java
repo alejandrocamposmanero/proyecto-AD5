@@ -2,6 +2,8 @@ package dam.ad.apirest.model;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity(name = "habitaciones")
 public class Habitacion {
     @Id
@@ -11,6 +13,7 @@ public class Habitacion {
     private double precio;
     @ManyToOne
     private Cliente cliente;
+    private Date fecha;
 
     public Habitacion() {
     }
@@ -18,17 +21,20 @@ public class Habitacion {
     public Habitacion(int numCamas, double precio) {
         this.numCamas = numCamas;
         this.precio = precio;
+        this.fecha = new Date();
     }
 
     public Habitacion(int id, int numCamas, double precio) {
         this.id = id;
         this.numCamas = numCamas;
         this.precio = precio;
+        this.fecha = new Date();
     }
 
     public Habitacion(int numCamas, double precio, Cliente cliente) {
         this.numCamas = numCamas;
         this.precio = precio;
+        this.fecha = new Date();
         setCliente(cliente);
     }
 
@@ -36,6 +42,7 @@ public class Habitacion {
         this.id = id;
         this.numCamas = numCamas;
         this.precio = precio;
+        this.fecha = new Date();
         setCliente(cliente);
     }
 
@@ -70,6 +77,14 @@ public class Habitacion {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
         cliente.addHabitacion(this);
+    }
+
+    public Date getFecha(){
+        return fecha;
+    }
+
+    public void setFecha(Date fecha){
+        this.fecha = fecha;
     }
 
     @Override
